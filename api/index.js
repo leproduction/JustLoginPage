@@ -1,13 +1,14 @@
 require('dotenv').config();
 const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose')
-const cors = require('cors'); // Import the cors module
+const mongoose = require('mongoose');
+const cors = require('cors');
+
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 // Middleware to parse JSON in the request body
-app.use(bodyParser.json());
+app.use(express.json());
+
 // Enable CORS for all routes
 app.use(cors({
   origin: ["https://emailpromotionnow.vercel.app"],
@@ -15,23 +16,33 @@ app.use(cors({
   credentials: true
 }));
 
-// Connect to MongoDB (replace 'your_database_url' and 'your_database_name' with your actual MongoDB URL and database name)
-mongoose.connect(process.env.MONGODB_URL);
+// Connect to MongoDB
+async function connectToDatabase() {
+  try {
+    await mongoose.connect(process.env.MONGODB_URL);
+    console.log('Connected to MongoDB');
+  } catch (error) {
+    console.error('MongoDB connection error:', error);
+    process.exit(1);
+  }
+}
+
+connectToDatabase();
+
 // Define a schema for the emails
 const emailSchema = new mongoose.Schema({
   email: String,
 });
+
 const Email = mongoose.model('Email', emailSchema);
+
 // Define a route for handling email submission
 app.post('/submitEmail', async (req, res) => {
   try {
     const newEmail = new Email({ email: req.body.email });
     await newEmail.save();
-    // Assuming the email is sent successfully, you can customize this part
-    // In a real-world scenario, you might use a dedicated email service
-    // (e.g., Nodemailer for Node.js applications) to send emails.
 
-    // For demonstration purposes, I'm just logging the email data.
+    // For demonstration purposes, log the email data
     console.log('Received email:', req.body.email);
 
     // Respond with a success message
@@ -46,14 +57,15 @@ app.post('/submitEmail', async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
-mongoose.connection.on('connected', () => {
-    console.log('Connected to MongoDB');
-  });
-  
-  mongoose.connection.on('error', (err) => {
-    console.error('MongoDB connection error:', err);
-  });
-  
-  mongoose.connection.on('disconnected', () => {
-    console.log('Disconnected from MongoDB');
-  });
+
+// Event listeners for MongoDB connection
+mongoose.connection.on('disconnected', () => {
+  console.log('Disconnected from MongoDB');
+});
+
+// Close MongoDB connection when the Node.js process is terminated
+process.on('SIGINT', async () => {
+  await mongoose.connection.close();
+  console.log('MongoDB connection closed');
+  process.exit(0);
+});
