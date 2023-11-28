@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 // Enable CORS for all routes
 app.use(cors({
   origin: ["https://loginpagedeploy.vercel.app"],
-  methods: ["POST", "GET"],
+  methods: ["POST"],
   credentials: true
 }));
 
