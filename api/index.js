@@ -10,7 +10,7 @@ const port = 5000;
 app.use(bodyParser.json());
 // Enable CORS for all routes
 app.use(cors({
-  origin: ["https://loginpagedeploy.vercel.app"],
+  origin: ["https://just-login-page.vercel.app/"],
   methods: ["POST"],
   credentials: true
 }));

@@ -14,7 +14,7 @@ export default function MyComponent() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // async request which may result error
-    try {const response = await fetch('http://localhost:5000/submitEmail', {
+    try {const response = await fetch('https://just-login-page.vercel.app/submitEmail', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
