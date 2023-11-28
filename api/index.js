@@ -9,7 +9,11 @@ const port = 5000;
 // Middleware to parse JSON in the request body
 app.use(bodyParser.json());
 // Enable CORS for all routes
-app.use(cors());
+app.use(cors({
+  origin: ["https://loginpagedeploy.vercel.app"],
+  methods: ["POST", "GET"],
+  credentials: true
+}));
 
 // Connect to MongoDB (replace 'your_database_url' and 'your_database_name' with your actual MongoDB URL and database name)
 mongoose.connect(process.env.MONGODB_URL);
