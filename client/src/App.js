@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 import { Container, Row, Col, Form } from 'react-bootstrap';
-
+import axios from 'axios';
 // Define your functional component
 export default function MyComponent() {
   const [getInput, setInput] = useState('');
@@ -10,24 +10,13 @@ export default function MyComponent() {
   const handleChange = (e) => {
     setInput(e.target.value);
   };
-
+axios.defaults.withCredentials=true;
   const handleSubmit = async (e) => {
     e.preventDefault();
     // async request which may result error
-    try {
-      const response = await fetch('https://just-login-page.vercel.app/submitEmail', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: getInput }), // Replace with the actual email data
-      });
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-      console.log('Connecting failed');
-    }
+    axios.post('https://just-login-page.vercel.app/submitEmail', {getInput})
+    .then(result=> console.log(result))
+    .catch(err=> console.log(err))
   };
 
   return (
