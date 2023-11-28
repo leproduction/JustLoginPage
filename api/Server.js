@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose')
@@ -11,7 +12,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // Connect to MongoDB (replace 'your_database_url' and 'your_database_name' with your actual MongoDB URL and database name)
-mongoose.connect('mongodb+srv://emailPromotion:port@emailpromotion.ntuycyb.mongodb.net/?retryWrites=true&w=majority');
+mongoose.connect(process.env.MONGODB_URL);
 // Define a schema for the emails
 const emailSchema = new mongoose.Schema({
   email: String,
