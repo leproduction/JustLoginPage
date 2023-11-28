@@ -5,16 +5,16 @@ import { Container, Row, Col, Form } from 'react-bootstrap';
 import axios from 'axios';
 // Define your functional component
 export default function MyComponent() {
-  const [getInput, setInput] = useState('');
+  const [email, setEmail] = useState('');
 
   const handleChange = (e) => {
-    setInput(e.target.value);
+    setEmail(e.target.value);
   };
 axios.defaults.withCredentials=true;
   const handleSubmit = async (e) => {
     e.preventDefault();
     // async request which may result error
-    axios.post('https://just-login-page.vercel.app/submitEmail', {getInput})
+    axios.post('https://just-login-page.vercel.app/submitEmail', {email})
     .then(result=> console.log(result))
     .catch(err=> console.log(err))
   };
@@ -25,10 +25,10 @@ axios.defaults.withCredentials=true;
         <Col>
           <Form onSubmit={handleSubmit}>
             <label>Get 20% off Voucher</label>
-            <h1>{getInput}</h1>
+            <h1>{email}</h1>
             <input
               type="email"
-              value={getInput}
+              value={email}
               onChange={handleChange}
               className="form-control" // Add Bootstrap class for styling
               placeholder="Email"
