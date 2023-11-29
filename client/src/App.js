@@ -6,18 +6,26 @@ import axios from 'axios';
 // Define your functional component
 export default function MyComponent() {
   const [email, setEmail] = useState('');
-
+  const [alert, setAlert] =useState('')
   const handleChange = (e) => {
     setEmail(e.target.value);
   };
 axios.defaults.withCredentials=true;
   const handleSubmit = async (e) => {
     e.preventDefault();
+   try { 
     // async request which may result error
-    axios.post('https://just-login-page.vercel.app/submitEmail', {email})
-    .then(result=> console.log(result))
-    .catch(err=> console.log(err))
-  };
+   const response = await axios.post('https://just-login-page.vercel.app/submitEmail', {email})
+ 
+    if(response.status===200) {
+      console.log('Email Submitted Successfully', setAlert('Email Submitted Successfully'))
+    } else {
+      console.log('Server Error')
+    }
+  } catch(error) {
+    console.error('Error submitting email', error, setAlert('Error submitting email'));
+    console.log('Server Error')
+  }setEmail('')};
 
   return (
     <div
@@ -46,9 +54,9 @@ axios.defaults.withCredentials=true;
           <Form onSubmit={handleSubmit}>
             <label>Welcome to <big className='text-info'>Miami Shop</big></label> <br></br>
             <label 
-        
-            >Sign up & <big className='text-danger'>20% off</big> Voucher</label>
 
+            >Sign up & <big className='text-danger'>20% off</big> Voucher</label><br></br>
+            <h3 className='text-danger'>{alert}</h3>
             <input
               type="email"
               value={email}
